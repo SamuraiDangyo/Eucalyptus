@@ -1,6 +1,6 @@
 ##
 #
-# Eucalyptus, a KPK Bitbases for Chess Engines
+# Eucalyptus, KPK Bitbases For Chess Engines
 # GNU General Public License version 3; for details see LICENSE
 #
 ##

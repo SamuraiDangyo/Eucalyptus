@@ -1,6 +1,6 @@
 /**
 *
-* Eucalyptus, a KPK Bitbases for Chess Engines
+* Eucalyptus, KPK Bitbases For Chess Engines
 * Copyright (C) 2019 Toni Helminen ( kalleankka1@gmail.com )
 *
 * Eucalyptus is free software: you can redistribute it and/or modify

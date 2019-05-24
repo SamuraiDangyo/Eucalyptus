@@ -1,6 +1,6 @@
 /**
 *
-* Eucalyptus, a KPK Bitbases for Chess Engines
+* Eucalyptus, KPK Bitbases For Chess Engines
 * Copyright (C) 2019 Toni Helminen ( kalleankka1@gmail.com )
 *
 * Eucalyptus is free software: you can redistribute it and/or modify
@@ -240,7 +240,7 @@ static void Build()
 
 static void Write_license(FILE* f)
 {
-	fprintf(f, "/**\n* Eucalyptus, a KPK Bitbases for Chess Engines\n"); 
+	fprintf(f, "/**\n* Eucalyptus, KPK Bitbases For Chess Engines\n"); 
 	fprintf(f, "* GNU General Public License version 3; for details see LICENSE\n");
 	fprintf(f, "**/\n\n");
 }
@@ -311,7 +311,7 @@ static void Print_help()
 {
 	P("%s v%s by %s", NAME, VERSION, AUTHOR);
 	P("Usage: Eucalyptus [OPTION]... ");
-	P("Generate KPK bitbases\n~~~");
+	P("Generate KPK Bitbases\n~~~");
 	P("Options:");
 	P("--help: This help");
 	P("--license: GPLv3");
