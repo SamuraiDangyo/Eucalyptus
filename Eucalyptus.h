@@ -34,7 +34,7 @@ static void Write_program();
 static void Tests();
 static void Write();
 static void Init();
-//static void Write_license(FILE* f);
+static void Write_info(FILE* f);
 static void Print_help();
 static void Print_license();
 static void Options(int argc, char** argv);
