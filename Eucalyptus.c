@@ -7,12 +7,12 @@
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*  
+* 
 * Eucalyptus is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-  
+ 
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *
@@ -73,25 +73,25 @@ static char CPP = 0;
 /**
 * FUNCTIONS
 **/
-	
+
 static float Time_diff(const clock_t time)
 {
-	return FLOAT(clock() - time) / FLOAT(CLOCKS_PER_SEC); 
+	return FLOAT(clock() - time) / FLOAT(CLOCKS_PER_SEC);
 }
 
-static int Max(const int a, const int b) 
+static int Max(const int a, const int b)
 {
 	return a > b ? a : b;
 }
 
-static int Min(const int a, const int b) 
+static int Min(const int a, const int b)
 {
 	return a < b ? a : b;
 }
 
-static void P(const char *f, ...) 
+static void P(const char *f, ...)
 {
-	va_list a; 
+	va_list a;
 	va_start(a, f);
 	vfprintf(stdout, f, a);
 	va_end(a);
@@ -101,65 +101,65 @@ static void P(const char *f, ...)
 	
 static char Attacks(const int k, const int i)
 {
-	int j; 
-	for (j = 0; j < KING_MOVES_L[k]; j++) 
-		if (KING_MOVES[k][j] == i) 
-			return 1; 
+	int j;
+	for (j = 0; j < KING_MOVES_L[k]; j++)
+		if (KING_MOVES[k][j] == i)
+			return 1;
 	return 0;
 }
 
-static char Attacks2(const int p, const int i) 
+static char Attacks2(const int p, const int i)
 {
-	int j; 
-	for (j = 0; j < PAWN_ATTACK_L[p]; j++) 
-		if (PAWN_ATTACK[p][j] == i) 
-			return 1; 
+	int j;
+	for (j = 0; j < PAWN_ATTACK_L[p]; j++)
+		if (PAWN_ATTACK[p][j] == i)
+			return 1;
 	return 0;
 }
 
-static char Stalemate(const int wp, const int wk, const int bk) 
+static char Stalemate(const int wp, const int wk, const int bk)
 {
-	int i; 
-	for (i = 0; i < KING_MOVES_L[bk]; i++) 
-		if ( ! Attacks(wk, KING_MOVES[bk][i]) && ! Attacks2(wp, KING_MOVES[bk][i])) 
-			return 0; 
+	int i;
+	for (i = 0; i < KING_MOVES_L[bk]; i++)
+		if ( ! Attacks(wk, KING_MOVES[bk][i]) && ! Attacks2(wp, KING_MOVES[bk][i]))
+			return 0;
 	return 1;
 }
 
-static char Win(const int wp, const int wk, const int bk, const int wtm, const int d) 
+static char Win(const int wp, const int wk, const int bk, const int wtm, const int d)
 {
 	int i;
 	int r = 0;
-	if (RESULT2[d][wtm][wp][wk][bk]) 
+	if (RESULT2[d][wtm][wp][wk][bk])
 		return RESULT[d][wtm][wp][wk][bk];
-	if ( ! wtm && Attacks(bk, wp) && ! Attacks(wk, wp)) 
+	if ( ! wtm && Attacks(bk, wp) && ! Attacks(wk, wp))
 		return -1;
-	if (X(wp) > 3) 
+	if (X(wp) > 3)
 		return Win(8 * Y(wp) + 7 - X(wp), 8 * Y(wk) + 7 - X(wk), 8 * Y(bk) + 7 - X(bk), wtm, d);
-	if (Y(wp) == 7) 
-		return (Attacks(wk, wp) || !Attacks(bk, wp)) ? 1 : -1;
-	if (wtm && Attacks2(wp, bk)) 
+	if (Y(wp) == 7)
+		return (Attacks(wk, wp) || ! Attacks(bk, wp)) ? 1 : -1;
+	if (wtm && Attacks2(wp, bk))
 		return 1;
-	if (wtm && Attacks(wk, bk)) 
+	if (wtm && Attacks(wk, bk))
 		return 1;
-	if ( ! wtm && Attacks(bk, wk)) 
+	if ( ! wtm && Attacks(bk, wk))
 		return -1;
-	if (Stalemate(wp, wk, bk)) 
+	if (Stalemate(wp, wk, bk))
 		return -1;
-	if (WINS[wtm][wp][wk][bk]) 
+	if (WINS[wtm][wp][wk][bk])
 		return WINS[wtm][wp][wk][bk];
-	if (wk == wp || wp == bk || wk == bk || wp < 8) 
+	if (wk == wp || wp == bk || wk == bk || wp < 8)
 		return 0;
-	if (d <= 0) 
+	if (d <= 0)
 		return 0;
 	if (wtm) {
-		if (wp + 8 != wk && wp + 8 != bk) 
-			r = Max(-1, Win(wp + 8, wk, bk, !wtm, d - 1)); 
-		if (r == 1) 
+		if (wp + 8 != wk && wp + 8 != bk)
+			r = Max(-1, Win(wp + 8, wk, bk, ! wtm, d - 1));
+		if (r == 1)
 			goto goto_exit;
-		if (Y(wp) == 1 && wp + 8 != wk && wp + 8 != bk && wp + 16 != wk && wp + 16 != bk) 
-			r = Max(r, Win(wp + 16, wk, bk, !wtm, d - 1)); 
-		if (r == 1) 
+		if (Y(wp) == 1 && wp + 8 != wk && wp + 8 != bk && wp + 16 != wk && wp + 16 != bk)
+			r = Max(r, Win(wp + 16, wk, bk, ! wtm, d - 1));
+		if (r == 1)
 			goto goto_exit;
 		for (i = 0; i < KING_MOVES_L[wk]; i++) {
 			r = Max(r, Win(wp, KING_MOVES[wk][i], bk, ! wtm, d - 1));
@@ -167,7 +167,7 @@ static char Win(const int wp, const int wk, const int bk, const int wtm, const i
 				goto goto_exit;
 		}
 	} else {
-		r = 1; 
+		r = 1;
 		for (i = 0; i < KING_MOVES_L[bk]; i++) {
 			r = Min(r, Win(wp, wk, KING_MOVES[bk][i], ! wtm, d - 1));
 			if (r == -1)
@@ -176,18 +176,18 @@ static char Win(const int wp, const int wk, const int bk, const int wtm, const i
 	}
 goto_exit: // <- goto
 	RESULT2[d][wtm][wp][wk][bk] = 1;
-	RESULT[d][wtm][wp][wk][bk] = r; 
+	RESULT[d][wtm][wp][wk][bk] = r;
 	return r;
 }
 
-static void Pack(const int wtm) 
+static void Pack(const int wtm)
 {
-	int i, j, k, q; 
+	int i, j, k, q;
 	for (i = 0; i < 64; i++) {
 		for (j = 0; j < 64; j++) {
 			for (k = 0; k < 64; k++) {
-				if ((0x1ULL << i) & 0xFFF0F0F0F0F0F0FFULL) 
-					continue; 
+				if ((0x1ULL << i) & 0xFFF0F0F0F0F0F0FFULL)
+					continue;
 				q = wtm * 24 * 64 * 64 + (4 * (i >> 3) - 4 + (i & 3)) * 64 * 64 + j * 64 + k;
 				EUCALYPTUS_KPK[q / 64] |= (WINS[wtm][i][j][k] == 1 ? 0x1ULL : 0) << (q & 63);
 			}
@@ -195,15 +195,15 @@ static void Pack(const int wtm)
 	}
 }
 
-static char Probe_Eucalyptus(int white_pawn, int white_king, int black_king, const int wtm) 
+static char Probe_Eucalyptus(int white_pawn, int white_king, int black_king, const int wtm)
 {
-	int i; 
+	int i;
 	if ((0x1ULL << white_pawn) & 0xF0F0F0F0F0F0F0F0ULL) {
 		white_king = 8 * (white_king >> 3) + (7 - (white_king & 7));
-		white_pawn = 8 * (white_pawn >> 3) + (7 - (white_pawn & 7)); 
+		white_pawn = 8 * (white_pawn >> 3) + (7 - (white_pawn & 7));
 		black_king = 8 * (black_king >> 3) + (7 - (black_king & 7));
 	}
-	i = wtm * 24 * 64 * 64 + (4 * (white_pawn >> 3) - 4 + (white_pawn & 3)) * 64 * 64 + white_king * 64 + black_king; 
+	i = wtm * 24 * 64 * 64 + (4 * (white_pawn >> 3) - 4 + (white_pawn & 3)) * 64 * 64 + white_king * 64 + black_king;
 	return (EUCALYPTUS_KPK[i / 64] & (0x1ULL << (i & 63))) ? 1 : 0;
 }
 
@@ -222,14 +222,14 @@ static void Tests()
 	assert( ! Probe_Eucalyptus(11, 3, 19, 1));
 }
 
-static void Build() 
+static void Build()
 {
 	int w, i, j, k;	
 	for (w = 0; w < 2; w++) {
 		for (i = 63; i > -1; i--) {
 			for (j = 0; j < 64; j++) {
 				for (k = 0; k < 64; k++) {
-					WINS[w][i][j][k] = Win(i, j, k, w, 49) == 1 ? 1 : 0; 
+					WINS[w][i][j][k] = Win(i, j, k, w, 49) == 1 ? 1 : 0;
 				}
 			}
 		}
@@ -240,27 +240,30 @@ static void Build()
 
 static void Write_license(FILE* f)
 {
-	fprintf(f, "/**\n* Eucalyptus, KPK Bitbases For Chess Engines\n"); 
+	fprintf(f, "/**\n* Eucalyptus, KPK Bitbases For Chess Engines\n");
 	fprintf(f, "* GNU General Public License version 3; for details see LICENSE\n");
 	fprintf(f, "**/\n\n");
 }
 
-static void Write_header() 
+static void Write_header()
 {
-	int i; 
-	FILE* f = fopen(CPP ? "Eucalyptus_KPK.hpp" : "Eucalyptus_KPK.h", "w");
+	int i;
+	const char *fstr = CPP ? "Eucalyptus_KPK.hpp" : "Eucalyptus_KPK.h";
+	FILE *f = fopen(fstr, "w");
 	EUCALYPTUS_ASSERT(f != NULL)
 	Write_license(f);
-	fprintf(f, "char Probe_Eucalyptus(int wp, int wk, int bk, const int wtm);\n\n"); 
-	fprintf(f, "const unsigned long long EUCALYPTUS_KPK[(2 * 24 * 64 * 64) / 64] = {\n"); 
-	for (i = 0; i < MCOUNT; i++) 
+	fprintf(f, "char Probe_Eucalyptus(int wp, int wk, int bk, const int wtm);\n\n");
+	fprintf(f, "const unsigned long long EUCALYPTUS_KPK[(2 * 24 * 64 * 64) / 64] = {\n");
+	for (i = 0; i < MCOUNT; i++)
 		fprintf(f, "\t0x%llxULL%s\n", EUCALYPTUS_KPK[i], i < MCOUNT - 1 ? "," : "");
 	fprintf(f, "};");
+	P("... %s", fstr);
 }
-	
-static void Write_program() 
+
+static void Write_program()
 {
-	FILE* f = fopen(CPP ? "Eucalyptus_KPK.cpp" : "Eucalyptus_KPK.c", "w");
+	const char *fstr = CPP ? "Eucalyptus_KPK.cpp" : "Eucalyptus_KPK.c";
+	FILE *f = fopen(fstr, "w");
 	EUCALYPTUS_ASSERT(f != NULL)
 	Write_license(f);
 	fprintf(f, "char Probe_Eucalyptus(int white_pawn, int white_king, int black_king, const int wtm)\n{\n\
@@ -273,24 +276,25 @@ static void Write_program()
 	i = wtm * 24 * 64 * 64 + (4 * (white_pawn >> 3) - 4 + (white_pawn & 3)) * 64 * 64 + white_king * 64 + black_king;\n\
 	return (EUCALYPTUS_KPK[i / 64] & (0x1ULL << (i & 63))) ? 1 : 0;\n}");
 	fclose(f);
+	P("... %s", fstr);
 }
 
-static void Write() 
+static void Write()
 {
 	Write_header();
 	Write_program();
 }
 
-static void Init() 
-{ 
-	int i, j, h, l;  
+static void Init()
+{
+	int i, j, h, l; 
 	for (i = 0; i < 64; i++) {
 		h = 16 * Y(i) + X(i);
-		l = 0; 
+		l = 0;
 		for (j = 0; j < 8; j++) {
 			if (LEGAL(h + KING_MOVES_D[0][j])) {
 				KING_MOVES[i][l] = i + KING_MOVES_D[1][j];
-				l++; 
+				l++;
 				KING_MOVES_L[i] = l;
 			}
 		}
@@ -304,14 +308,14 @@ static void Init()
 			l++;
 		}
 		PAWN_ATTACK_L[i] = l;
-	} 
+	}
 }
 
-static void Print_help() 
+static void Print_help()
 {
 	P("%s v%s by %s", NAME, VERSION, AUTHOR);
 	P("Usage: Eucalyptus [OPTION]... ");
-	P("Generate KPK Bitbases\n~~~");
+	P("Add Generated KPK Bitbases To Your Chess Program\n~~~");
 	P("Options:");
 	P("--help: This help");
 	P("--license: GPLv3");
@@ -319,13 +323,13 @@ static void Print_help()
 	exit(0);
 }
 
-static void Print_license() 
+static void Print_license()
 {
 	P("GNU General Public License version 3; for details see LICENSE");
 	exit(0);
 }
 
-static void Options(int argc, char** argv) 
+static void Options(int argc, char** argv)
 {
 	int i;
 	for (i = 0; i < argc; i++) {
@@ -336,20 +340,20 @@ static void Options(int argc, char** argv)
 		else if ( ! strcmp(argv[i], "--license"))
 			Print_license();
 	}
-
 }
 
 static void Eucalyptus()
 {
 	clock_t time = clock();
 	P("%s v%s by %s", NAME, VERSION, AUTHOR);
+	P("Generating ...");
 	Init();
 	Build();
-	Write(); 
-	printf("~ done ~ %.3fs\n", Time_diff(time));
+	Write();
+	printf("Done ~ %.3fs\n", Time_diff(time));
 }
 
-int main(int argc, char** argv) 
+int main(int argc, char** argv)
 {
 	Options(argc, argv);
 	Eucalyptus();
