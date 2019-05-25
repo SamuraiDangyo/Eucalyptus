@@ -1,6 +1,6 @@
 ##
 #
-# Eucalyptus, KPK Bitbases For Chess Engines
+# Eucalyptus, KPK Bitbases Generator
 # GNU General Public License version 3; for details see LICENSE
 #
 ##

@@ -1,15 +1,15 @@
 ## Eucalyptus
-KPK Bitbases For Chess Engines
+KPK Bitbases Generator
 
 ## Tech
-Eucalyptus KPK Bitbases tells whether a position is draw or not. Nothing else.
+Eucalyptus KPK Bitbases tells whether a position is a draw or not. Nothing else.
 
-Import generated files into your engine and you are ready to go.
+Import generated KPK Bitbases into your engine and you are ready to go.
 
 Use makefile to generate needed bitbases.
 
 ## License
-Eucalyptus, KPK Bitbases For Chess Engines
+Eucalyptus, KPK Bitbases Generator
 
 Eucalyptus is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

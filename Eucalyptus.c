@@ -1,6 +1,6 @@
 /**
 *
-* Eucalyptus, KPK Bitbases For Chess Engines
+* Eucalyptus, KPK Bitbases Generator
 * Copyright (C) 2019 Toni Helminen ( kalleankka1@gmail.com )
 *
 * Eucalyptus is free software: you can redistribute it and/or modify
@@ -40,14 +40,15 @@
 **/
 
 #define NAME "Eucalyptus"
-#define VERSION "1.0"
+#define VERSION "1.01"
 #define AUTHOR "Toni Helminen"
+
+#define MCOUNT ((2 * 24 * 64 * 64) / 64)
 
 /**
 * MACROS
 **/
 
-#define MCOUNT ((2 * 24 * 64 * 64) / 64)
 #define FLOAT(a) ((float) (a))
 #define LEGAL(i) ( ! ((i) & 0x88))
 #define X(a) ((a) & 7)
@@ -238,12 +239,14 @@ static void Build()
 	Tests();
 }
 
+/*
 static void Write_license(FILE* f)
 {
-	fprintf(f, "/**\n* Eucalyptus, KPK Bitbases For Chess Engines\n");
+	fprintf(f, "/ **\n* Eucalyptus, KPK Bitbases Generator\n");
 	fprintf(f, "* GNU General Public License version 3; for details see LICENSE\n");
-	fprintf(f, "**/\n\n");
+	fprintf(f, "** /\n\n");
 }
+*/
 
 static void Write_header()
 {
@@ -251,7 +254,7 @@ static void Write_header()
 	const char *fstr = CPP ? "Eucalyptus_KPK.hpp" : "Eucalyptus_KPK.h";
 	FILE *f = fopen(fstr, "w");
 	EUCALYPTUS_ASSERT(f != NULL)
-	Write_license(f);
+	//Write_license(f);
 	fprintf(f, "char Probe_Eucalyptus(int wp, int wk, int bk, const int wtm);\n\n");
 	fprintf(f, "const unsigned long long EUCALYPTUS_KPK[(2 * 24 * 64 * 64) / 64] = {\n");
 	for (i = 0; i < MCOUNT; i++)
@@ -265,7 +268,7 @@ static void Write_program()
 	const char *fstr = CPP ? "Eucalyptus_KPK.cpp" : "Eucalyptus_KPK.c";
 	FILE *f = fopen(fstr, "w");
 	EUCALYPTUS_ASSERT(f != NULL)
-	Write_license(f);
+	//Write_license(f);
 	fprintf(f, "char Probe_Eucalyptus(int white_pawn, int white_king, int black_king, const int wtm)\n{\n\
 	int i;\n\
 	if ((0x1ULL << white_pawn) & 0xF0F0F0F0F0F0F0F0ULL) {\n\
@@ -315,7 +318,7 @@ static void Print_help()
 {
 	P("%s v%s by %s", NAME, VERSION, AUTHOR);
 	P("Usage: Eucalyptus [OPTION]... ");
-	P("Add Generated KPK Bitbases To Your Chess Program\n~~~");
+	P("Generate KPK Bitbases For Your Chess Engine\n~~~");
 	P("Options:");
 	P("--help: This help");
 	P("--license: GPLv3");

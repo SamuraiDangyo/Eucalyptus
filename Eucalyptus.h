@@ -1,6 +1,6 @@
 /**
 *
-* Eucalyptus, KPK Bitbases For Chess Engines
+* Eucalyptus, KPK Bitbases Generator
 * Copyright (C) 2019 Toni Helminen ( kalleankka1@gmail.com )
 *
 * Eucalyptus is free software: you can redistribute it and/or modify
@@ -34,7 +34,7 @@ static void Write_program();
 static void Tests();
 static void Write();
 static void Init();
-static void Write_license(FILE* f);
+//static void Write_license(FILE* f);
 static void Print_help();
 static void Print_license();
 static void Options(int argc, char** argv);
