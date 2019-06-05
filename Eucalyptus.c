@@ -28,6 +28,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <assert.h>
+#include <stdbool.h>
 
 /**
 * EUCALYPTUS INCLUDES
@@ -40,7 +41,7 @@
 **/
 
 #define NAME "Eucalyptus"
-#define VERSION "1.02"
+#define VERSION "1.03"
 #define AUTHOR "Toni Helminen"
 
 #define MCOUNT ((2 * 24 * 64 * 64) / 64)
@@ -69,7 +70,7 @@ static int RESULT[100][2][64][64][64] = {{{{{0}}}}};
 static int RESULT2[100][2][64][64][64] = {{{{{0}}}}};
 static const int KING_MOVES_D[2][8] = {{17,15,-15,-17,16,-16,1,-1},{9,7,-7,-9,8,-8,1,-1}};
 static unsigned long long EUCALYPTUS_KPK[MCOUNT] = {0};
-static char CPP = 0;
+static bool CPP = 0;
 
 /**
 * FUNCTIONS
@@ -100,7 +101,7 @@ static void P(const char *f, ...)
 	fflush(stdout);
 }
 	
-static char Attacks(const int k, const int i)
+static bool Attacks(const int k, const int i)
 {
 	int j;
 	for (j = 0; j < KING_MOVES_L[k]; j++)
@@ -109,7 +110,7 @@ static char Attacks(const int k, const int i)
 	return 0;
 }
 
-static char Attacks2(const int p, const int i)
+static bool Attacks2(const int p, const int i)
 {
 	int j;
 	for (j = 0; j < PAWN_ATTACK_L[p]; j++)
@@ -118,7 +119,7 @@ static char Attacks2(const int p, const int i)
 	return 0;
 }
 
-static char Stalemate(const int wp, const int wk, const int bk)
+static bool Stalemate(const int wp, const int wk, const int bk)
 {
 	int i;
 	for (i = 0; i < KING_MOVES_L[bk]; i++)
@@ -196,9 +197,10 @@ static void Pack(const int wtm)
 	}
 }
 
-static char Probe_Eucalyptus(int white_pawn, int white_king, int black_king, const int wtm)
+static bool Probe_Eucalyptus(int white_pawn, int white_king, int black_king, const int wtm)
 {
 	int i;
+	assert(wtm == 1 || wtm == 0);
 	if ((0x1ULL << white_pawn) & 0xF0F0F0F0F0F0F0F0ULL) {
 		white_king = 8 * (white_king >> 3) + (7 - (white_king & 7));
 		white_pawn = 8 * (white_pawn >> 3) + (7 - (white_pawn & 7));
@@ -253,11 +255,16 @@ static void Write_header()
 	FILE *f = fopen(fstr, "w");
 	EUCALYPTUS_ASSERT(f != NULL)
 	Write_info(f);
-	fprintf(f, "char Probe_Eucalyptus(int wp, int wk, int bk, const int wtm);\n\n");
+	fprintf(f, "#ifndef EUCALYPTUS_H\n");
+	fprintf(f, "#define EUCALYPTUS_H\n\n");
+	fprintf(f, "#include <assert.h>\n");
+	fprintf(f, "#include <stdbool.h>\n\n");
+	fprintf(f, "bool Probe_Eucalyptus(int white_pawn, int white_king, int black_king, const int wtm);\n\n");
 	fprintf(f, "const unsigned long long EUCALYPTUS_KPK[(2 * 24 * 64 * 64) / 64] = {\n");
 	for (i = 0; i < MCOUNT; i++)
 		fprintf(f, "\t0x%llxULL%s\n", EUCALYPTUS_KPK[i], i < MCOUNT - 1 ? "," : "");
-	fprintf(f, "};");
+	fprintf(f, "};\n\n");
+	fprintf(f, "#endif /** END EUCALYPTUS_H **/");
 	P("... %s", fstr);
 }
 
@@ -267,8 +274,9 @@ static void Write_program()
 	FILE *f = fopen(fstr, "w");
 	EUCALYPTUS_ASSERT(f != NULL)
 	Write_info(f);
-	fprintf(f, "char Probe_Eucalyptus(int white_pawn, int white_king, int black_king, const int wtm)\n{\n\
+	fprintf(f, "bool Probe_Eucalyptus(int white_pawn, int white_king, int black_king, const int wtm)\n{\n\
 	int i;\n\
+	assert(wtm == 1 || wtm == 0);\n\
 	if ((0x1ULL << white_pawn) & 0xF0F0F0F0F0F0F0F0ULL) {\n\
 		white_king = 8 * (white_king >> 3) + (7 - (white_king & 7));\n\
 		white_pawn = 8 * (white_pawn >> 3) + (7 - (white_pawn & 7));\n\
