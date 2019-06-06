@@ -18,6 +18,9 @@
 *
 **/
 
+#ifndef EUCALYPTUS_H
+#define EUCALYPTUS_H
+
 static float Time_diff(const clock_t time);
 static int Max(const int a, const int b);
 static int Min(const int a, const int b);
@@ -27,7 +30,7 @@ static bool Attacks2(const int p, const int i);
 static bool Stalemate(const int wp, const int wk, const int bk);
 static char Win(const int wp, const int wk, const int bk, const int wtm, const int d);
 static void Pack(const int wtm);
-static bool Probe_Eucalyptus(int white_pawn, int white_king, int black_king, const int wtm);
+static bool Probe_Eucalyptus(int white_pawn, int white_king, int black_king, const bool wtm);
 static void Build();
 static void Write_header();	
 static void Write_program();
@@ -39,3 +42,5 @@ static void Print_help();
 static void Print_license();
 static void Options(int argc, char** argv);
 static void Eucalyptus();
+
+#endif /** END EUCALYPTUS_H **/
