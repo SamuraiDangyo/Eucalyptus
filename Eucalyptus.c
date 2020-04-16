@@ -27,103 +27,103 @@ static unsigned long long EUCALYPTUS_KPK[MCOUNT]  = {0};
 static int Max(const int a, const int b) {return a > b ? a : b;}
 static int Min(const int a, const int b) {return a < b ? a : b;}
 static bool Attacks(const int sq, const int to) {for (int i = 0; i < KING_MOVES_L[sq]; i++) if (KING_MOVES[sq][i] == to) return 1; return 0;}
-static bool Attacks2(const int sq, const int to) {for (int i = 0; i < PAWN_ATTACK_L[sq]; i++) if (PAWN_ATTACK[sq][i] == to) return 1;	return 0;}
-static bool Stalemate(const int wp, const int wk, const int bk) {for (int i = 0; i < KING_MOVES_L[bk]; i++) if ( ! Attacks(wk, KING_MOVES[bk][i]) && ! Attacks2(wp, KING_MOVES[bk][i])) return 0;	return 1;}
+static bool Attacks2(const int sq, const int to) {for (int i = 0; i < PAWN_ATTACK_L[sq]; i++) if (PAWN_ATTACK[sq][i] == to) return 1;  return 0;}
+static bool Stalemate(const int wp, const int wk, const int bk) {for (int i = 0; i < KING_MOVES_L[bk]; i++) if ( ! Attacks(wk, KING_MOVES[bk][i]) && ! Attacks2(wp, KING_MOVES[bk][i])) return 0;  return 1;}
 
 static int Win(const int wp, const int wk, const int bk, const int wtm, const int winsq) {
-	int result = 0;
-	if (RESULT2[winsq][wtm][wp][wk][bk])                return RESULT[winsq][wtm][wp][wk][bk];
-	if ( ! wtm && Attacks(bk, wp) && ! Attacks(wk, wp)) return -1;
-	if (X(wp) > 3)                 return Win(8 * Y(wp) + 7 - X(wp), 8 * Y(wk) + 7 - X(wk), 8 * Y(bk) + 7 - X(bk), wtm, winsq);
-	if (Y(wp) == 7)                return (Attacks(wk, wp) || ! Attacks(bk, wp)) ? 1 : -1;
-	if (wtm && Attacks2(wp, bk))   return 1;
-	if (wtm && Attacks(wk, bk))    return 1;
-	if ( ! wtm && Attacks(bk, wk)) return -1;
-	if (Stalemate(wp, wk, bk))     return -1;
-	if (WINS[wtm][wp][wk][bk]) return WINS[wtm][wp][wk][bk];
-	if (wk == wp || wp == bk || wk == bk || wp < 8) return 0;
-	if (winsq <= 0) return 0;
-	if (wtm) {
-		if (wp + 8 != wk && wp + 8 != bk) result = Max(-1, Win(wp + 8, wk, bk, ! wtm, winsq - 1));
-		if (result == 1) goto out;
-		if (Y(wp) == 1 && wp + 8 != wk && wp + 8 != bk && wp + 16 != wk && wp + 16 != bk) result = Max(result, Win(wp + 16, wk, bk, ! wtm, winsq - 1));
-		if (result == 1) goto out;
-		for (int i = 0; i < KING_MOVES_L[wk]; i++) {
-			result = Max(result, Win(wp, KING_MOVES[wk][i], bk, ! wtm, winsq - 1));
-			if (result == 1) goto out;
-		}
-	} else {
-		result = 1;
-		for (int i = 0; i < KING_MOVES_L[bk]; i++) {
-			result = Min(result, Win(wp, wk, KING_MOVES[bk][i], ! wtm, winsq - 1));
-			if (result == -1) goto out;
-		}
-	}
+  int result = 0;
+  if (RESULT2[winsq][wtm][wp][wk][bk])                return RESULT[winsq][wtm][wp][wk][bk];
+  if ( ! wtm && Attacks(bk, wp) && ! Attacks(wk, wp)) return -1;
+  if (X(wp) > 3)                 return Win(8 * Y(wp) + 7 - X(wp), 8 * Y(wk) + 7 - X(wk), 8 * Y(bk) + 7 - X(bk), wtm, winsq);
+  if (Y(wp) == 7)                return (Attacks(wk, wp) || ! Attacks(bk, wp)) ? 1 : -1;
+  if (wtm && Attacks2(wp, bk))   return 1;
+  if (wtm && Attacks(wk, bk))    return 1;
+  if ( ! wtm && Attacks(bk, wk)) return -1;
+  if (Stalemate(wp, wk, bk))     return -1;
+  if (WINS[wtm][wp][wk][bk]) return WINS[wtm][wp][wk][bk];
+  if (wk == wp || wp == bk || wk == bk || wp < 8) return 0;
+  if (winsq <= 0) return 0;
+  if (wtm) {
+    if (wp + 8 != wk && wp + 8 != bk) result = Max(-1, Win(wp + 8, wk, bk, ! wtm, winsq - 1));
+    if (result == 1) goto out;
+    if (Y(wp) == 1 && wp + 8 != wk && wp + 8 != bk && wp + 16 != wk && wp + 16 != bk) result = Max(result, Win(wp + 16, wk, bk, ! wtm, winsq - 1));
+    if (result == 1) goto out;
+    for (int i = 0; i < KING_MOVES_L[wk]; i++) {
+      result = Max(result, Win(wp, KING_MOVES[wk][i], bk, ! wtm, winsq - 1));
+      if (result == 1) goto out;
+    }
+  } else {
+    result = 1;
+    for (int i = 0; i < KING_MOVES_L[bk]; i++) {
+      result = Min(result, Win(wp, wk, KING_MOVES[bk][i], ! wtm, winsq - 1));
+      if (result == -1) goto out;
+    }
+  }
 out:
-	RESULT2[winsq][wtm][wp][wk][bk] = 1;
-	RESULT[winsq][wtm][wp][wk][bk]  = result;
-	return result;
+  RESULT2[winsq][wtm][wp][wk][bk] = 1;
+  RESULT[winsq][wtm][wp][wk][bk]  = result;
+  return result;
 }
 
 static void Pack(const int wtm) {
-	for (int i = 0; i < 64; i++)
-		for (int j = 0; j < 64; j++)
-			for (int k = 0; k < 64; k++) {
-				if ((0x1ULL << i) & 0xFFF0F0F0F0F0F0FFULL) continue;
-				const int sq = wtm * 24 * 64 * 64 + (4 * (i >> 3) - 4 + (i & 3)) * 64 * 64 + j * 64 + k;
-				EUCALYPTUS_KPK[sq / 64] |= (WINS[wtm][i][j][k] == 1 ? 0x1ULL : 0) << (sq & 63);
-			}
+  for (int i = 0; i < 64; i++)
+    for (int j = 0; j < 64; j++)
+      for (int k = 0; k < 64; k++) {
+        if ((0x1ULL << i) & 0xFFF0F0F0F0F0F0FFULL) continue;
+        const int sq = wtm * 24 * 64 * 64 + (4 * (i >> 3) - 4 + (i & 3)) * 64 * 64 + j * 64 + k;
+        EUCALYPTUS_KPK[sq / 64] |= (WINS[wtm][i][j][k] == 1 ? 0x1ULL : 0) << (sq & 63);
+      }
 }
 
 static void Build(void) {
-	for (int color = 0; color < 2; color++) {for (int i = 63; i > -1; i--) for (int j = 0; j < 64; j++) for (int k = 0; k < 64; k++)	WINS[color][i][j][k] = Win(i, j, k, color, 49) == 1 ? 1 : 0; Pack(color);}
+  for (int color = 0; color < 2; color++) {for (int i = 63; i > -1; i--) for (int j = 0; j < 64; j++) for (int k = 0; k < 64; k++)  WINS[color][i][j][k] = Win(i, j, k, color, 49) == 1 ? 1 : 0; Pack(color);}
 }
 
 static void WriteHeader(void) {
-	FILE *file = fopen("EucalyptusKPK.h", "w");
-	assert(file != NULL);
-	fprintf(file, "// Generated by: Eucalyptus, a KPK Bitbases generator\n#ifndef EUCALYPTUSKPK_H_GUARD\n#define EUCALYPTUSKPK_H_GUARD\n#include <stdbool.h>\n#include <stdint.h>\nbool EucalyptusKPK(int white_pawn, int white_king, int black_king, const bool wtm);\nconst uint64_t EUCALYPTUS_KPK[(2 * 24 * 64 * 64) / 64] = {");
-	for (int i = 0; i < MCOUNT; i++) fprintf(file, "0x%llxULL%s", EUCALYPTUS_KPK[i], i < MCOUNT - 1 ? "," : "");
-	fprintf(file, "};\n#endif");
-	fclose(file);
+  FILE *file = fopen("EucalyptusKPK.h", "w");
+  assert(file != NULL);
+  fprintf(file, "// Generated by: Eucalyptus, a KPK Bitbases generator\n#ifndef EUCALYPTUSKPK_H_GUARD\n#define EUCALYPTUSKPK_H_GUARD\n#include <stdbool.h>\n#include <stdint.h>\nbool EucalyptusKPK(int white_pawn, int white_king, int black_king, const bool wtm);\nconst uint64_t EUCALYPTUS_KPK[(2 * 24 * 64 * 64) / 64] = {");
+  for (int i = 0; i < MCOUNT; i++) fprintf(file, "0x%llxULL%s", EUCALYPTUS_KPK[i], i < MCOUNT - 1 ? "," : "");
+  fprintf(file, "};\n#endif");
+  fclose(file);
 }
 
 static void WriteProgram(void) {
-	FILE *file = fopen("EucalyptusKPK.c", "w");
-	assert(file != NULL);
-	fprintf(file, "// Generated by: Eucalyptus, a KPK Bitbases generator\nbool EucalyptusKPK(int white_king, int white_pawn, int black_king, const bool wtm) {if ((white_pawn & 7) & 4) {white_king ^= 7;white_pawn ^= 7;black_king ^= 7;} return EUCALYPTUS_KPK[(wtm ? 1 : 0) * 24 * 64 + (4 * ((white_pawn >> 3) - 1) + (white_pawn & 7)) * 64 + white_king] & (0x1ULL << (black_king & 63));}");
-	fclose(file);
+  FILE *file = fopen("EucalyptusKPK.c", "w");
+  assert(file != NULL);
+  fprintf(file, "// Generated by: Eucalyptus, a KPK Bitbases generator\nbool EucalyptusKPK(int white_king, int white_pawn, int black_king, const bool wtm) {if ((white_pawn & 7) & 4) {white_king ^= 7;white_pawn ^= 7;black_king ^= 7;} return EUCALYPTUS_KPK[(wtm ? 1 : 0) * 24 * 64 + (4 * ((white_pawn >> 3) - 1) + (white_pawn & 7)) * 64 + white_king] & (0x1ULL << (black_king & 63));}");
+  fclose(file);
 }
 
 static void Init(void) {
-	for (int sq = 0; sq < 64; sq++) {
-		const int tosq = 16 * Y(sq) + X(sq);
-		int len = 0;
-		for (int j = 0; j < 8; j++) {
-			if (LEGAL(tosq + KING_MOVES_D[0][j])) {
-				KING_MOVES[sq][len] = sq + KING_MOVES_D[1][j];
-				len++;
-				KING_MOVES_L[sq] = len;
-			}
-		}
-		len = 0;
-		if (LEGAL(tosq + 15)) {PAWN_ATTACK[sq][len] = sq + 7; len++;}
-		if (LEGAL(tosq + 17)) {PAWN_ATTACK[sq][len] = sq + 9;	len++;}
-		PAWN_ATTACK_L[sq] = len;
-	}
+  for (int sq = 0; sq < 64; sq++) {
+    const int tosq = 16 * Y(sq) + X(sq);
+    int len = 0;
+    for (int j = 0; j < 8; j++) {
+      if (LEGAL(tosq + KING_MOVES_D[0][j])) {
+        KING_MOVES[sq][len] = sq + KING_MOVES_D[1][j];
+        len++;
+        KING_MOVES_L[sq] = len;
+      }
+    }
+    len = 0;
+    if (LEGAL(tosq + 15)) {PAWN_ATTACK[sq][len] = sq + 7; len++;}
+    if (LEGAL(tosq + 17)) {PAWN_ATTACK[sq][len] = sq + 9;  len++;}
+    PAWN_ATTACK_L[sq] = len;
+  }
 }
 
 static void Generate(void) {
-	clock_t time = clock();
-	printf("%s by Toni Helminen\n", NAME);
-	Init();
-	Build();
-	WriteHeader();
-	WriteProgram();
-	printf("Done ~ %.3fs\n", ((float)(clock() - time)) / ((float)(CLOCKS_PER_SEC)));
+  clock_t time = clock();
+  printf("%s by Toni Helminen\n", NAME);
+  Init();
+  Build();
+  WriteHeader();
+  WriteProgram();
+  printf("Done ~ %.3fs\n", ((float)(clock() - time)) / ((float)(CLOCKS_PER_SEC)));
 }
 
 int main(int argc, char** argv) {
-	Generate();
-	return EXIT_SUCCESS;
+  Generate();
+  return EXIT_SUCCESS;
 }

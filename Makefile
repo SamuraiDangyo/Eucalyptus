@@ -1,8 +1,8 @@
 all:
-	clang -O2 -pedantic -Wall -o Eucalyptus Eucalyptus.c
+	clang -O2 -pedantic -Wall -o eucalyptus Eucalyptus.c
 
 generate:
-	./Eucalyptus
+	./eucalyptus
 
 clean:
-	rm -f EucalyptusKPK* Eucalyptus
+	rm -f EucalyptusKPK* eucalyptus
