@@ -1,5 +1,5 @@
 all:
-	clang -O2 -pedantic -Wall -o eucalyptus Eucalyptus.c
+	clang++ Eucalyptus.cpp -O2 -pedantic -Wall -o eucalyptus
 
 generate:
 	./eucalyptus

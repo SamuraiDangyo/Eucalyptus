@@ -1,10 +1,10 @@
 # Overview
-Eucalyptus, a KPK Bitbases generator
+Eucalyptus is a KPK bitbases generator
 
 ## About
-These bitbases tells whether a position is a draw or not. Nothing else.
+These KPK bitbases tells whether a position is a draw or not. Nothing else.
 
-Generate bitbases and include them on your program :
+Generate the bitbases and include them on your program :
 
 ```
 make clean all generate
